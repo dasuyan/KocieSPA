@@ -1,4 +1,4 @@
-package pja.kociespa.dao;
+package pja.kociespa.util;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -6,18 +6,19 @@ import org.hibernate.cfg.Configuration;
 import pja.kociespa.model.*;
 
 import java.sql.Date;
-import java.util.List;
 
+/**
+ * Class that holds a static SessionFactory, allows to open sessions and populate database with test data.
+ */
 public class HibernateUtil {
     private static SessionFactory sessionFactory;
 
-    public static SessionFactory getSessionFactory(){
+    public static SessionFactory getSessionFactory() {
         if (sessionFactory == null) {
             try {
                 sessionFactory = new Configuration()
                         .configure("hibernate.cfg.xml")
                         .buildSessionFactory();
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -25,7 +26,7 @@ public class HibernateUtil {
 
         return sessionFactory;
     }
-    public static void createTestData(){
+    public static void createTestData() {
         try (Session session = getSessionFactory().openSession()) {
 
             session.beginTransaction();
@@ -69,7 +70,7 @@ public class HibernateUtil {
             treatment3.addEmployee(caretaker3);
             treatment3.addEmployee(caretaker1);
 
-            // receptionist (the actor for the main use case as well)
+            // Receptionist (the actor for the main use case as well)
             Receptionist receptionist = new Receptionist("Sephiroth", "Cloud", "male", "123456789", Date.valueOf("2000-01-11"), "98564376542", Date.valueOf("2020-03-20"), 10);
 
             // exemplary Stay
@@ -81,9 +82,9 @@ public class HibernateUtil {
             stay.setCat(cat1);
             stay.setCaretaker(caretaker1);
             stay.setReceptionist(receptionist);
+            stay.setTotalPrice(500.0);
 
-            // persist
-
+            // Persist
             session.persist(customer1);
             session.persist(customer2);
             session.persist(customer3);
@@ -111,6 +112,5 @@ public class HibernateUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }

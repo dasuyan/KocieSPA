@@ -14,11 +14,12 @@ import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
 
 import static pja.kociespa.util.GeneralUtil.switchToNextScene;
 import static pja.kociespa.util.HibernateUtil.getSessionFactory;
 
-public class summaryController {
+public class SummaryController {
 
     @FXML
     private ComboBox<Cat> catComboBox;
@@ -70,6 +71,9 @@ public class summaryController {
         initCancelButton();
     }
 
+    /**
+     * Builds the summary of the stay. The data is retrieved from the AppData singleton and put into the appropriate components.
+     */
     private void buildSummary() {
         catComboBox.setValue(cat);
         caretakerComboBox.setValue(caretaker);
@@ -83,20 +87,22 @@ public class summaryController {
         chosenTreatmentTableView.setItems(treatmentsAndEmployees);
     }
 
+    /**
+     * Calculates the total price of the stay, based on the number of days, the service class and price of the chosen treatments.
+     */
     private void calculateTotalPrice() {
-        int days = Period.between(startDate, endDate).getDays();
-        if (days == 0) {
-            days = 1;
-        }
+        long days = ChronoUnit.DAYS.between(startDate, endDate) + 1;
         totalPrice = days * serviceClass.pricePerDay;
 
         for (Pair<Treatment, Employee> pair : treatmentsAndEmployees) {
             totalPrice += pair.getKey().getPrice();
         }
-
         totalPriceTextField.setText(String.valueOf(totalPrice));
     }
 
+    /**
+     * Creates the confirm button. Allows the user to confirm adding the stay to the database. Then returns the user to the main view.
+     */
     private void initConfirmButton() {
         confirmButton.setOnAction(e -> {
             try {
@@ -110,6 +116,9 @@ public class summaryController {
         });
     }
 
+    /**
+     * Creates the cancel button. Allows the user to abandon the stay adding process and return to the main view.
+     */
     private void initCancelButton() {
         cancelButton.setOnAction(e -> {
             try {
@@ -121,6 +130,9 @@ public class summaryController {
         });
     }
 
+    /**
+     * Creates the stay in the database.
+     */
     private void createStay() {
         try (Session session = getSessionFactory().openSession()) {
             session.beginTransaction();
