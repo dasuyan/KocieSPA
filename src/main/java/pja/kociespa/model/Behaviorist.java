@@ -11,7 +11,7 @@ public class Behaviorist extends Employee {
     @Column(nullable = false)
     private boolean handlesAggressiveCats;
 
-    @OneToMany(mappedBy = "behaviorist", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "behaviorist", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<Cat> cats = new ArrayList<>();
 
     public Behaviorist(String name, String surname, String sex, String phoneNumber, Date birthDate, String pesel, Date hireDate, boolean handlesAggressiveCats) {
@@ -35,6 +35,10 @@ public class Behaviorist extends Employee {
         return cats;
     }
 
+    public void setCats(List<Cat> cats) {
+        this.cats = cats;
+    }
+
     public void addCat(Cat cat) {
         if (!cats.contains(cat)) {
             cats.add(cat);
@@ -46,11 +50,4 @@ public class Behaviorist extends Employee {
     public void displayFullEmployeeInfo() {
     }
 
-    @Override
-    public String toString() {
-        return "Behaviorist{" +
-                "handlesAggressiveCats=" + handlesAggressiveCats +
-                ", cats=" + cats +
-                '}';
-    }
 }

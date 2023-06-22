@@ -17,7 +17,7 @@ public class Receptionist extends Employee {
     @Column(nullable = false)
     private int workEndHour;
 
-    @OneToMany(mappedBy = "receptionist", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "receptionist", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<Stay> stays = new ArrayList<>();
 
     public Receptionist(String name, String surname, String sex, String phoneNumber, Date birthDate, String pesel, Date hireDate,

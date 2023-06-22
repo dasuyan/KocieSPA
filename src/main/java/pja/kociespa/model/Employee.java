@@ -25,7 +25,7 @@ public abstract class Employee extends Person {
     @Column(nullable = false)
     protected long tenure; // in months
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "Employee_Stay",
             joinColumns = @JoinColumn(name = "employee_id"),
@@ -33,8 +33,7 @@ public abstract class Employee extends Person {
     )
     private List<Stay> stays = new ArrayList<>();
 
-
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "Employee_Treatment",
             joinColumns = @JoinColumn(name = "employee_id"),
@@ -99,10 +98,18 @@ public abstract class Employee extends Person {
         return stays;
     }
 
+    public void setStays(List<Stay> stays) {
+        this.stays.clear();
+        if (stays != null) {
+            this.stays.addAll(stays);
+        }
+        //this.stays = stays;
+    }
+
     public void addStay(Stay stay) {
         if (!stays.contains(stay)) {
             stays.add(stay);
-            stay.addEmployee(this);
+            stay.getEmployees().add(this);
         }
     }
 
@@ -116,10 +123,14 @@ public abstract class Employee extends Person {
     public List<Treatment> getTreatments() {
         return treatments;
     }
+
+    public void setTreatments(List<Treatment> treatments) {
+        this.treatments = treatments;
+    }
+
     public void addTreatment(Treatment treatment) {
         if (!treatments.contains(treatment)) {
             treatments.add(treatment);
-            treatment.addEmployee(this);
         }
     }
 
@@ -128,6 +139,14 @@ public abstract class Employee extends Person {
             treatments.remove(treatment);
             treatment.removeEmployee(this);
         }
+    }
+
+    public List<Certificate> getCertificates() {
+        return certificates;
+    }
+
+    public void setCertificates(List<Certificate> certificates) {
+        this.certificates = certificates;
     }
 
     public abstract void displayFullEmployeeInfo();

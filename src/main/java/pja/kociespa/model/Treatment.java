@@ -18,10 +18,10 @@ public class Treatment {
     @Column(nullable = false)
     private Double price;
 
-    @ManyToMany(mappedBy = "treatments", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "treatments", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<Employee> employees = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "Treatment_Stay",
             joinColumns = @JoinColumn(name = "treatment_id"),
@@ -75,10 +75,18 @@ public class Treatment {
         return stays;
     }
 
+    public void setStays(List<Stay> stays) {
+        this.stays.clear();
+        if (stays != null) {
+            this.stays.addAll(stays);
+        }
+        //this.stays = stays;
+    }
+
     public void addStay(Stay stay) {
-        if (!stays.contains(stay)) {
+        if (stay != null && !stays.contains(stay)) {
             stays.add(stay);
-            stay.addTreatment(this);
+            stay.getTreatments().add(this);
         }
     }
 

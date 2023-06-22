@@ -55,4 +55,20 @@ public class Certificate {
     public void setCertificateDate(Date certificateDate) {
         this.certificateDate = certificateDate;
     }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    public Specialization getSpecialization() {
+        return specialization;
+    }
+
+    public void setSpecialization(Specialization specialization) {
+        this.specialization = specialization;
+    }
 }

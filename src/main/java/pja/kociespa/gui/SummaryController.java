@@ -138,14 +138,33 @@ public class SummaryController {
             session.beginTransaction();
 
             Stay stay = new Stay(Date.valueOf(startDate), Date.valueOf(endDate), serviceClass);
+
             for (Pair<Treatment, Employee> pair : treatmentsAndEmployees) {
-                stay.addTreatment(pair.getKey());
-                stay.addEmployee(pair.getValue());
+                Treatment mergedTreatment = session.merge(pair.getKey());
+                stay.addTreatment(mergedTreatment);
+
+                // We need to avoid trying to add the same employee twice.
+                boolean employeeAdded = false;
+                for (Employee employee : stay.getEmployees()) {
+                    if (employee.getId().equals(pair.getValue().getId())) {
+                        employeeAdded = true;
+                        break;
+                    }
+                }
+
+                if (!employeeAdded) {
+                    Employee mergedEmployee = session.merge(pair.getValue());
+                    stay.addEmployee(mergedEmployee);
+                }
             }
 
-            stay.setCaretaker(caretaker);
-            stay.setCat(cat);
-            stay.setReceptionist(receptionist);
+            Caretaker mergedCaretaker = session.merge(caretaker);
+            Cat mergedCat = session.merge(cat);
+            Receptionist mergedReceptionist = session.merge(receptionist);
+
+            stay.setCaretaker(mergedCaretaker);
+            stay.setCat(mergedCat);
+            stay.setReceptionist(mergedReceptionist);
             stay.setTotalPrice(totalPrice);
 
             session.persist(stay);

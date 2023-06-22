@@ -80,7 +80,7 @@ public class HibernateUtil {
             stay.addEmployee(caretaker1);
             stay.addEmployee(caretaker2);
             stay.setCat(cat1);
-            stay.setCaretaker(caretaker1);
+            stay.setCaretaker(caretaker3);
             stay.setReceptionist(receptionist);
             stay.setTotalPrice(500.0);
 

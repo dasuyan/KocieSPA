@@ -95,7 +95,9 @@ public class TreatmentDetailsController {
 
             treatmentTableView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
                 employeeTableView.getItems().clear();
-                employeeTableView.getItems().addAll(newValue.getEmployees());
+                if (newValue != null) {
+                    employeeTableView.getItems().addAll(newValue.getEmployees());
+                }
             });
         }
 
@@ -106,7 +108,7 @@ public class TreatmentDetailsController {
 
     /**
      * Initializes the add treatment button, lets the user add a treatment to a list of treatments to be added to the stay.
-     * Only works if both the treatment and employee to perform it were selected.
+     * Only works if both the treatment and employee to perform it were selected. Removes the treatment from the selectable list.
      */
     private void initAddTreatmentButton() {
         addTreatmentButton.setOnAction(e -> {
@@ -114,18 +116,23 @@ public class TreatmentDetailsController {
                     || employeeTableView.getSelectionModel().getSelectedItem() == null) {
                 return;
             }
+
             treatmentsAndEmployees.add(new Pair<>(treatmentTableView.getSelectionModel().getSelectedItem(), employeeTableView.getSelectionModel().getSelectedItem()));
+            treatments.remove(treatmentTableView.getSelectionModel().getSelectedItem());
         });
     }
 
     /**
      * Removes the selected treatment&employee pair from the list of selected treatments for the stay.
+     * Moves the treatment back to the selectable list.
      */
     private void initRemoveTreatmentButton() {
         removeTreatmentButton.setOnAction(e -> {
             if (chosenTreatmentTableView.getSelectionModel().getSelectedItem() == null) {
                 return;
             }
+
+            treatments.add(chosenTreatmentTableView.getSelectionModel().getSelectedItem().getKey());
             treatmentsAndEmployees.remove(chosenTreatmentTableView.getSelectionModel().getSelectedItem());
         });
     }

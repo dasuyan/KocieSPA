@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 public class Caretaker extends Employee {
-    @OneToMany(mappedBy = "caretaker", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "caretaker", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<Stay> stays = new ArrayList<>();
 
     public Caretaker(String name, String surname, String sex, String phoneNumber, Date birthDate, String pesel, Date hireDate) {

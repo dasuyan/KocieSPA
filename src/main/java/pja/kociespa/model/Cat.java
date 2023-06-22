@@ -24,7 +24,7 @@ public class Cat {
     @Column(nullable = false)
     private String breed;
 
-    @OneToMany(mappedBy = "cat", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "cat", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<Stay> stays = new ArrayList<>();
 
     /**
@@ -100,6 +100,7 @@ public class Cat {
     public Customer getCustomer() {
         return customer;
     }
+
     public void setCustomer(Customer customer) {
         if (customer != null && this.customer != customer) {
             this.customer = customer;
@@ -121,6 +122,11 @@ public class Cat {
     public List<Stay> getStays() {
         return stays;
     }
+
+    public void setStays(List<Stay> stays) {
+        this.stays = stays;
+    }
+
     public void addStay(Stay stay) {
         if (!stays.contains(stay)) {
             stays.add(stay);
@@ -133,6 +139,14 @@ public class Cat {
             stays.remove(stay);
             stay.setCat(null);
         }
+    }
+
+    public List<PersonalBelonging> getPersonalBelongings() {
+        return personalBelongings;
+    }
+
+    public void setPersonalBelongings(List<PersonalBelonging> personalBelongings) {
+        this.personalBelongings = personalBelongings;
     }
 
     @Override

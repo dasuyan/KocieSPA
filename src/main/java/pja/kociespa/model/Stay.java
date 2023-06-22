@@ -29,10 +29,10 @@ public class Stay {
     @Column(nullable = false)
     private Double totalPrice = 0.0;
 
-    @ManyToMany(mappedBy = "stays", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "stays", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<Employee> employees = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "stays", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "stays", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<Treatment> treatments = new ArrayList<>();
 
     @ManyToOne
@@ -104,11 +104,25 @@ public class Stay {
         this.totalPrice = totalPrice;
     }
 
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+
+    /*public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
+    }*/
+
+    public List<Treatment> getTreatments() {
+        return treatments;
+    }
+
+    /*public void setTreatments(List<Treatment> treatments) {
+        this.treatments = treatments;
+    }*/
+
     public void addTreatment(Treatment treatment) {
-        if (!treatments.contains(treatment)) {
-            treatments.add(treatment);
-            treatment.addStay(this);
-        }
+        getTreatments().add(treatment);
+        treatment.getStays().add(this);
     }
 
     public void removeTreatment(Treatment treatment) {
@@ -121,7 +135,7 @@ public class Stay {
     public void addEmployee(Employee employee) {
         if (!employees.contains(employee)) {
             employees.add(employee);
-            employee.addStay(this);
+            employee.getStays().add(this);
         }
     }
 

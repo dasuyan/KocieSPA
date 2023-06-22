@@ -33,10 +33,15 @@ public class Customer extends Person {
     public List<Cat> getCats() {
         return cats;
     }
+
+    public void setCats(List<Cat> cats) {
+        this.cats = cats;
+    }
+
     public void addCat(Cat cat) {
         if (!cats.contains(cat)) {
             cats.add(cat);
-            cat.setCustomer(this);
+            //cat.setCustomer(this);
         }
     }
 
